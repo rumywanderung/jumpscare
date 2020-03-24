@@ -7,6 +7,7 @@ public class AIManager : MonoBehaviour
 {
     public GameManager manager; //target
     Transform target;
+    public Transform player;
     public NavMeshAgent AI_1; //agent
     public GameObject waypoint1;
     public GameObject waypoint2;
@@ -16,18 +17,82 @@ public class AIManager : MonoBehaviour
     private bool inPoint = false;
     private bool toPoint = false;
     public float distance;
-    bool hitDetect;
+    //bool hitDetect;
+    int numWaypoint;
 
-    public Collider enemy1Collider;
+    //public Collider enemy1Collider;
+
+    GameObject[] waypoints;
+
+    //possibilities if one waypoint has been reached
+
+    //int numWaypointIfAtW1;
+    //int numWaypointIfAtW2;
+    //int numWaypointIfAtW3;
+    //int numWaypointIfAtW4;
+
+    int[] optionsIfAtW1;
+    int[] optionsIfAtW2;
+    int[] optionsIfAtW3;
+    int[] optionsIfAtW4;
 
     void Start()
     {
         manager = FindObjectOfType<GameManager>();
-        target = manager.player.gameObject.transform;
         distance = 10F;
         //enemy1Collider = AI_1.gameObject.GetComponent<Collider>();
+        numWaypoint = Random.Range(0, 3); //random waypoint
+        waypoints = new GameObject[4] { waypoint1, waypoint2, waypoint3, waypoint4 };
+
+        optionsIfAtW1 = new int[] { 1, 2, 3 };
+        optionsIfAtW2 = new int[] { 0, 2, 3 };
+        optionsIfAtW3 = new int[] { 0, 1, 3 };
+        optionsIfAtW4 = new int[] { 0, 1, 2 };
+
+        target = waypoints[numWaypoint].transform;
+        Debug.Log(target.name);
     }
-    
+
+    //reaching a waypoint
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "waypoint")
+        {
+
+            Debug.Log("It's a waypoint!");
+
+
+            if (other.name == "Waypoint1")
+            {
+                int index = Random.Range(0, optionsIfAtW1.Length);
+                target = waypoints[index].transform;
+                Debug.Log(target.name);
+            }
+
+            else if (other.name == "Waypoint2")
+            {
+                int index = Random.Range(0, optionsIfAtW2.Length);
+                target = waypoints[index].transform;
+                Debug.Log(target.name);
+            }
+
+            else if (other.name == "Waypoint3")
+            {
+                int index = Random.Range(0, optionsIfAtW3.Length);
+                target = waypoints[index].transform;
+                Debug.Log(target.name);
+            }
+
+            else if (other.name == "Waypoint4")
+            {
+                int index = Random.Range(0, optionsIfAtW4.Length);
+                target = waypoints[index].transform;
+                Debug.Log(target.name);
+            }
+        }
+    }
+
     void Update()
     {
         AI_1.SetDestination(target.position);
@@ -35,6 +100,21 @@ public class AIManager : MonoBehaviour
         // raycast
 
         RaycastHit hit;
+        
+        //react to player in view
+
+        if (Physics.Raycast(AI_1.transform.position, AI_1.transform.TransformDirection(Vector3.forward), out hit, distance))
+        {
+
+            if (hit.collider.gameObject == player.gameObject)
+            {
+                target = manager.player.gameObject.transform;
+            }
+                
+        }
+
+  
+
         if (Physics.Raycast(AI_1.transform.position, AI_1.transform.TransformDirection(Vector3.forward), out hit, distance))
         {
             Debug.DrawRay(AI_1.transform.position, AI_1.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);

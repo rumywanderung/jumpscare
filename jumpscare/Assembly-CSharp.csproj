@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AIManager.cs" />
+    <Compile Include="Assets\Scripts\EnemyBehavior.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/roumi/Documents/GitHub/jumpscare/jumpscare/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
